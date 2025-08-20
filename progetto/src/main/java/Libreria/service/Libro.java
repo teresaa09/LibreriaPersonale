@@ -1,4 +1,4 @@
-package main.java.libreria.service;
+package Libreria.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -52,6 +52,8 @@ public class Libro {
     public void setCodiceISBN(String codiceISBN) { this.codiceISBN = codiceISBN; }
 
     public Generi getGenere() { return genere; }
+
+
     public void setGenere(Generi genere) { this.genere = genere; }
 
     public int getValutazione() { return valutazione; }
@@ -64,6 +66,16 @@ public class Libro {
 
     public StatoDellaLettura getStatus() { return status; }
     public void setStatus(StatoDellaLettura status) { this.status = status; }
+
+    public void modifica_valutazione(int nuovaValutazione) {
+        setValutazione(nuovaValutazione); // Usa il setter per validare
+        System.out.println("Valutazione del libro \"" + titolo + "\" modificata in: " + nuovaValutazione);
+    }
+
+    public void modifica_status(StatoDellaLettura nuovoStatus) {
+        this.status = nuovoStatus;
+        System.out.println("Stato della lettura \"" + titolo + "\" modificato in: " + nuovoStatus);
+    }
 
     @Override
     public String toString() {
