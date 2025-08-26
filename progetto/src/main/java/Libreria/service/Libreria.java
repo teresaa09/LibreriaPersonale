@@ -2,8 +2,9 @@ package Libreria.service;
 
 import Libreria.iterazione.Aggregato;
 import Libreria.iterazione.Iterator;
-import Libreria.iterazione.Libreria_iterator;
+import Libreria.iterazione.LibreriaIterator;
 import Libreria.observer.Subject;
+import Libreria.ordinamento.Ordinamento;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class Libreria extends Subject implements Aggregato {
 
     public void modifica_info(String isbn, int nuova_valutazione, StatoDellaLettura nuovo_status) {
         if (isbn == null) return;
-        Iterator<Libro> it = (Iterator<Libro>) crea_iterator();
+        Iterator<Libro> it = (Iterator<Libro>) creaIterator();
         Libro l = null;
         while (it.hasNext()) {
             l = (Libro) it.next();
@@ -60,7 +61,7 @@ public class Libreria extends Subject implements Aggregato {
 
     public void rimuovi_libro(String isbn) {
         if (isbn == null) return;
-        Iterator<Libro> it = crea_iterator();
+        Iterator<Libro> it = creaIterator();
         Libro l = null;
 
         while (it.hasNext()) {
@@ -81,7 +82,7 @@ public class Libreria extends Subject implements Aggregato {
 
     public List<Libro> filtra_genere(Generi genere) {
         List<Libro> risultati = new ArrayList<>();
-        Iterator<Libro> it = crea_iterator();
+        Iterator<Libro> it = creaIterator();
         while (it.hasNext()) {
             Libro libro = it.next();
             if (libro.getGenere().equals(genere)) {
@@ -116,6 +117,65 @@ public class Libreria extends Subject implements Aggregato {
         return risultati;
     }
 
+    public void ordina(Ordinamento strategiaOrdinamento) {
+        ArrayList<Libro> listaLibri = new ArrayList<>(this.libri);
+        strategiaOrdinamento.ordina(listaLibri);
+        this.libri = listaLibri;
+        notificaObservers("Libreria riordinata");
+    }
+
+    public List<Libro> cercaPerTitolo(String titolo) {
+        if (titolo == null || titolo.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Libro> risultati = new ArrayList<>();
+        Iterator<Libro> it = creaIterator();
+
+        while (it.hasNext()) {
+            Libro libro = it.next();
+            if (libro.getTitolo().toLowerCase().contains(titolo.toLowerCase())) {
+                risultati.add(libro);
+            }
+        }
+        return risultati;
+    }
+
+    public List<Libro> cercaPerAutore(String autore) {
+        if (autore == null || autore.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Libro> risultati = new ArrayList<>();
+        Iterator<Libro> it = creaIterator();
+
+        while (it.hasNext()) {
+            Libro libro = it.next();
+            if (libro.getAutore().toLowerCase().contains(autore.toLowerCase())) {
+                risultati.add(libro);
+            }
+        }
+        return risultati;
+    }
+
+    public List<Libro> cercaPerISBN(String isbn) {
+        if (isbn == null || isbn.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Libro> risultati = new ArrayList<>();
+        Iterator<Libro> it = creaIterator();
+
+        while (it.hasNext()) {
+            Libro libro = it.next();
+            if (libro.getCodiceISBN() != null &&
+                    libro.getCodiceISBN().toLowerCase().contains(isbn.toLowerCase())) {
+                risultati.add(libro);
+            }
+        }
+        return risultati;
+    }
+
 
     public void salvaSuFile() throws Exception {
         LibreriaStorage.salva(libri);
@@ -126,7 +186,7 @@ public class Libreria extends Subject implements Aggregato {
     }
 
     @Override
-    public Iterator<Libro> crea_iterator() {
-        return new Libreria_iterator(libri);
+    public Iterator<Libro> creaIterator() {
+        return new LibreriaIterator(libri);
     }
 }
