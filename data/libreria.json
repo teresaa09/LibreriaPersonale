@@ -1,1 +1,36 @@
-[ ]
+[ {
+  "titolo" : "A proposito di niente",
+  "autore" : "Woody Allen",
+  "codiceISBN" : "9788834603345",
+  "genere" : "AUTOBIOGRAFICO",
+  "valutazione" : 5,
+  "status" : "LETTO"
+}, {
+  "titolo" : "Il grande manuale del pasticciere",
+  "autore" : "Mélanie Dupuis",
+  "codiceISBN" : "9788867222957",
+  "genere" : "CUCINA",
+  "valutazione" : 4,
+  "status" : "LETTO"
+}, {
+  "titolo" : "Il trono di spade.",
+  "autore" : "George R.R. Martin",
+  "codiceISBN" : "9788804711957",
+  "genere" : "FANTASY",
+  "valutazione" : 0,
+  "status" : "LETTO"
+}, {
+  "titolo" : "L'alba della mietitura",
+  "autore" : "Suzanne Collins",
+  "codiceISBN" : "9788804796909",
+  "genere" : "FANTASY",
+  "valutazione" : 3,
+  "status" : "IN_LETTURA"
+}, {
+  "titolo" : "La portalettere",
+  "autore" : "Francesca Giannone",
+  "codiceISBN" : "9788842934844",
+  "genere" : "GIALLO",
+  "valutazione" : 0,
+  "status" : "DA_LEGGERE"
+} ]

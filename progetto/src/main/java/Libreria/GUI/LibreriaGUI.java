@@ -50,7 +50,7 @@ public class LibreriaGUI extends JFrame implements Observer {
         setSize(1200, 800);
         setLocationRelativeTo(null);
 
-        caricaDatiIniziali();
+
 
         addWindowListener(new WindowAdapter() {
             @Override
