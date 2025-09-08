@@ -34,6 +34,6 @@ public class LibreriaIterator implements Iterator<Libro> {
         }
         lista.remove(rimosso);
         corr = rimosso;
-        rimosso = -1; // blocco il doppio remove
+        rimosso = -1;
     }
 }

@@ -5,3 +5,7 @@ public interface Command {
     void annulla();
 
 }
+
+
+
+

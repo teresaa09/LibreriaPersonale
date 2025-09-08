@@ -1,7 +1,9 @@
 package Libreria.command;
 
+import Libreria.iterazione.Iterator;
+import Libreria.iterazione.LibreriaIterator;
 import Libreria.service.*;
-import java.util.Iterator;
+
 
 public class RimuoviLibroCommand implements Command {
     private Libreria libreria;
@@ -15,7 +17,7 @@ public class RimuoviLibroCommand implements Command {
 
     @Override
     public void esegui() {
-        Iterator<Libro> it = (Iterator<Libro>) libreria.crea_iterator();
+        Iterator<Libro> it = libreria.creaIterator();
         while (it.hasNext()) {
             Libro l = it.next();
             if (l.getCodiceISBN().equals(isbn)) {

@@ -1,17 +1,19 @@
 package Libreria.command;
 
+import Libreria.iterazione.Iterator;
+import Libreria.iterazione.LibreriaIterator;
 import Libreria.service.*;
-import java.util.Iterator;
+
 
 public class ModificaLibroCommand implements Command {
     private Libreria libreria;
     private String isbn;
     private int nuovaValutazione;
     private StatoDellaLettura nuovoStatus;
-
     // Campi per undo
     private int vecchiaValutazione;
     private StatoDellaLettura vecchioStatus;
+
 
     public ModificaLibroCommand(Libreria libreria, String isbn, int nuovaValutazione, StatoDellaLettura nuovoStatus) {
         this.libreria = libreria;
@@ -22,7 +24,7 @@ public class ModificaLibroCommand implements Command {
 
     @Override
     public void esegui() {
-        Iterator<Libro> it = (Iterator<Libro>) libreria.crea_iterator();
+        Iterator<Libro> it =  libreria.creaIterator();
         while (it.hasNext()) {
             Libro l = it.next();
             if (l.getCodiceISBN().equals(isbn)) {
@@ -36,7 +38,7 @@ public class ModificaLibroCommand implements Command {
     }
 
     public void annulla() {
-        Iterator<Libro> it = (Iterator<Libro>) libreria.crea_iterator();
+        Iterator<Libro> it = libreria.creaIterator();
         while (it.hasNext()) {
             Libro l = it.next();
             if (l.getCodiceISBN().equals(isbn)) {

@@ -31,6 +31,19 @@ public class Libro {
         this.status = StatoDellaLettura.DA_LEGGERE;
         this.valutazione = 0;
     }
+    public Libro(String titolo, String autore, StatoDellaLettura status, int valutazione) {
+        this.titolo = titolo;
+        this.autore = autore;
+        this.status = status;
+
+        if (status == StatoDellaLettura.DA_LEGGERE && valutazione > 0) {
+            throw new IllegalStateException("Impossibile valutare un libro nello stato 'DA_LEGGERE'");
+        }
+        if (valutazione < 0 || valutazione > 5) {
+            throw new IllegalArgumentException("La valutazione deve essere tra 0 e 5");
+        }
+        this.valutazione = valutazione;
+    }
 
     // Costruttore semplificato
     public Libro(String titolo, String autore) {
@@ -49,15 +62,19 @@ public class Libro {
     public void setAutore(String autore) { this.autore = autore; }
 
     public String getCodiceISBN() { return codiceISBN; }
+
     public void setCodiceISBN(String codiceISBN) { this.codiceISBN = codiceISBN; }
 
     public Generi getGenere() { return genere; }
 
-
     public void setGenere(Generi genere) { this.genere = genere; }
 
     public int getValutazione() { return valutazione; }
+
     public void setValutazione(int valutazione) {
+        if (this.status == StatoDellaLettura.DA_LEGGERE && valutazione > 0) {
+            throw new IllegalStateException("Impossibile valutare un libro nello stato 'DA_LEGGERE'");
+        }
         if (valutazione < 0 || valutazione > 5) {
             throw new IllegalArgumentException("La valutazione deve essere tra 0 e 5");
         }

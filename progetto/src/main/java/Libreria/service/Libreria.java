@@ -21,14 +21,15 @@ public class Libreria extends Subject implements Aggregato {
         if (libro == null) {
             throw new IllegalArgumentException("Il libro non può essere null");
         }
-
         // Controlla duplicati tramite ISBN
         if (libro.getCodiceISBN() != null &&
                 libri.stream().anyMatch(l -> libro.getCodiceISBN().equals(l.getCodiceISBN()))) {
             System.out.println("Libro con ISBN " + libro.getCodiceISBN() + " già presente!");
             return false;
         }
-
+        if (libro.getStatus()== StatoDellaLettura.DA_LEGGERE && libro.getValutazione() > 0) {
+            throw new IllegalStateException("Impossibile valutare un libro nello stato 'DA_LEGGERE'");
+        }
         libri.add(libro);
         System.out.println("Il libro \"" + libro.getTitolo() + "\" è stato aggiunto");
         notificaObservers("Aggiunto: " + libro.getTitolo());
@@ -41,31 +42,22 @@ public class Libreria extends Subject implements Aggregato {
 
     public void modifica_info(String isbn, int nuova_valutazione, StatoDellaLettura nuovo_status) {
         if (isbn == null) return;
-        Iterator<Libro> it = (Iterator<Libro>) creaIterator();
-        Libro l = null;
+        Iterator<Libro> it = this.creaIterator();
         while (it.hasNext()) {
-            l = (Libro) it.next();
+            Libro l = it.next();
             if (l.getCodiceISBN().equals(isbn)) {
                 l.modifica_status(nuovo_status);
-                if (l.getStatus().equals(StatoDellaLettura.LETTO)) {
-                    l.modifica_valutazione(nuova_valutazione);
-                }
+                l.modifica_valutazione(nuova_valutazione);
+                notificaObservers("Libro modificato: " + l.getTitolo());
+                return;
             }
         }
-        if (l != null) {
-            notificaObservers("Libro modificato: " + l.getTitolo());
-        } else {
-            System.out.println("Nessun libro trovato con ISBN " + isbn);
-        }
     }
-
     public void rimuovi_libro(String isbn) {
         if (isbn == null) return;
         Iterator<Libro> it = creaIterator();
-        Libro l = null;
-
         while (it.hasNext()) {
-            l = it.next();
+            Libro l = it.next();
             if (l.getCodiceISBN().equals(isbn)) {
                 it.remove();
                 System.out.println("Il libro \"" + l.getTitolo() + "\" è stato rimosso");
@@ -77,7 +69,6 @@ public class Libreria extends Subject implements Aggregato {
         // Nessun libro trovato
         System.out.println("Nessun libro trovato con ISBN " + isbn);
     }
-
 
 
     public List<Libro> filtra_genere(Generi genere) {
