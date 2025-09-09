@@ -81,32 +81,15 @@ public class LibreriaGUI extends JFrame implements Observer {
     @Override
     public void aggiorna(String messaggio) {
         SwingUtilities.invokeLater(() -> {
-            // Aggiorna la tabella usando i dati correnti della libreria
+            // Aggiorna la tabella
             aggiornaTabella();
             aggiornaStatistiche();
-
-            // Mostra notifica nella status bar se necessario
-            if (messaggio.contains("Aggiunto") || messaggio.contains("rimosso") || messaggio.contains("modificato")) {
-                // Potresti aggiungere una status bar per mostrare questi messaggi
-                System.out.println("GUI aggiornata: " + messaggio);
-            }
         });
-    }
-
-    private void caricaDatiIniziali() {
-        try {
-            libreria.caricaDaFile();
-            aggiornaTabella();
-            aggiornaStatistiche();
-        } catch (Exception e) {
-            System.out.println("Nessun file esistente trovato, inizializzazione con libreria vuota");
-        }
     }
 
     private void aggiornaTabella() {
         List<Libro> libriCorrente = getCurrentFilteredBooks();
         tableModel.setLibri(libriCorrente);
-        applicaOrdinamentoInTabella();
     }
 
     private List<Libro> getCurrentFilteredBooks() {
@@ -398,8 +381,6 @@ public class LibreriaGUI extends JFrame implements Observer {
             try {
                 StatoDellaLettura nuovoStato = (StatoDellaLettura) cbStato.getSelectedItem();
                 int nuovaValutazione = sVal.getValue();
-
-                // Usa Command Pattern per modificare il libro
                 Command cmd = new ModificaLibroCommand(
                         libreria,
                         sel.getCodiceISBN(),
@@ -440,7 +421,6 @@ public class LibreriaGUI extends JFrame implements Observer {
                 "Conferma rimozione", JOptionPane.YES_NO_OPTION);
 
         if (conf == JOptionPane.YES_OPTION) {
-            // Usa Command Pattern per rimuovere il libro
             Command cmd = new RimuoviLibroCommand(libreria, sel.getCodiceISBN());
             invoker.esegui(cmd);
             JOptionPane.showMessageDialog(this, "Libro rimosso con successo!");
@@ -507,12 +487,6 @@ public class LibreriaGUI extends JFrame implements Observer {
         aggiornaTabella();
     }
 
-    private void applicaOrdinamentoInTabella() {
-        if (comboOrdina != null) {
-            String criterio = (String) comboOrdina.getSelectedItem();
-            tableModel.ordinaLocalmente(criterio);
-        }
-    }
 
     private void resetFiltri() {
         campoRicerca.setText("");
@@ -577,38 +551,6 @@ public class LibreriaGUI extends JFrame implements Observer {
             return "";
         }
 
-        void ordinaLocalmente(String criterio) {
-            dati.sort((a,b) -> {
-                if ("Autore".equals(criterio)) {
-                    return safeCmp(a.getAutore(), b.getAutore());
-                } else if ("Genere".equals(criterio)) {
-                    String ga = a.getGenere() == null ? "" : a.getGenere().toString();
-                    String gb = b.getGenere() == null ? "" : b.getGenere().toString();
-                    return safeCmp(ga, gb);
-                } else if ("Valutazione".equals(criterio)) {
-                    return Integer.compare(a.getValutazione(), b.getValutazione());
-                } else if ("Stato".equals(criterio)) {
-                    return Integer.compare(priority(a.getStatus()), priority(b.getStatus()));
-                } else if ("ISBN".equals(criterio)) {
-                    return safeCmp(a.getCodiceISBN(), b.getCodiceISBN());
-                } else {
-                    return safeCmp(a.getTitolo(), b.getTitolo());
-                }
-            });
-            fireTableDataChanged();
-        }
-
-        private static int priority(StatoDellaLettura s) {
-            if (s == StatoDellaLettura.DA_LEGGERE) return 0;
-            if (s == StatoDellaLettura.IN_LETTURA) return 1;
-            return 2; 
-        }
-
-        private static int safeCmp(String a, String b) {
-            String sa = a == null ? "" : a.toLowerCase();
-            String sb = b == null ? "" : b.toLowerCase();
-            return sa.compareTo(sb);
-        }
     }
 
     private static class AlternatingRowRenderer extends DefaultTableCellRenderer {
